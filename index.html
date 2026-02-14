@@ -2,27 +2,78 @@
 <html>
 <head>
   <title>Dhanush AI</title>
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+
+    #chatBox {
+      width: 60%;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      min-height: 200px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: left;
+    }
+
+    .user {
+      color: blue;
+      margin: 5px 0;
+    }
+
+    .ai {
+      color: green;
+      margin: 5px 0;
+    }
+
+    input {
+      width: 60%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body style="font-family: Arial; text-align: center;">
+
+<body>
 
   <h1>🤖 Dhanush AI</h1>
 
-  <div>
-    <input type="text" id="userInput" placeholder="Ask me anything..." style="width: 300px; padding: 10px;">
-    <button onclick="sendMessage()">Send</button>
-  </div>
+  <div id="chatBox"></div>
 
-  <p id="response"></p>
+  <input type="text" id="userInput" placeholder="Ask me anything...">
+  <button onclick="sendMessage()">Send</button>
 
   <script>
     function sendMessage() {
       var input = document.getElementById("userInput").value;
-      document.getElementById("response").innerText = 
-      document.getElementById("response").innerText =
-  "Hello! I am Dhanush AI 🤖";
+      var chatBox = document.getElementById("chatBox");
 
+      if(input === "") return;
 
-    
+      chatBox.innerHTML += "<div class='user'><b>You:</b> " + input + "</div>";
+
+      var reply = "I am still learning 🤖";
+
+      if(input.toLowerCase() === "hi") {
+        reply = "Hello Dhanush! 👋";
+      } 
+      else if(input.toLowerCase() === "how are you") {
+        reply = "I am just code, but I feel awesome 😄";
+      }
+
+      chatBox.innerHTML += "<div class='ai'><b>AI:</b> " + reply + "</div>";
+
+      document.getElementById("userInput").value = "";
+    }
   </script>
 
 </body>
