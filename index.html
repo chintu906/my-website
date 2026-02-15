@@ -1,1 +1,27 @@
+// Function to ask AI and show the answer
+async function askAI(question) {
+    if (!question) return;
+
+    // Show the user question in your chat area (optional)
+    const chatDiv = document.getElementById('chat'); // make sure you have a div with id="chat"
+    chatDiv.innerHTML += `<div class="message user"><b>You:</b> ${question}</div>`;
+
+    try {
+        // Call your backend API
+        const response = await fetch('/ask', {   // '/ask' should be your backend endpoint
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+
+        // Show AI answer in your chat area
+        chatDiv.innerHTML += `<div class="message ai"><b>AI:</b> ${data.answer}</div>`;
+        chatDiv.scrollTop = chatDiv.scrollHeight; // scroll to bottom
+    } catch (error) {
+        console.error(error);
+        chatDiv.innerHTML += `<div class="message ai"><b>AI:</b> Sorry, something went wrong!</div>`;
+    }
+}
 
