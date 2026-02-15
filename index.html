@@ -1,130 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Dhanush AI</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #343541;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-
-    header {
-      background: #202123;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
-
-    #chatBox {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-    }
-
-    .user, .ai {
-      margin: 10px 0;
-    }
-
-    .user {
-      text-align: right;
-    }
-
-    .ai {
-      text-align: left;
-    }
-
-    .bubble {
-      display: inline-block;
-      padding: 10px 15px;
-      border-radius: 15px;
-      max-width: 70%;
-      word-wrap: break-word;
-    }
-
-    .user .bubble {
-      background: #10a37f;
-    }
-
-    .ai .bubble {
-      background: #444654;
-    }
-
-    .inputArea {
-      display: flex;
-      padding: 10px;
-      background: #202123;
-    }
-
-    input {
-      flex: 1;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      outline: none;
-    }
-
-    button {
-      padding: 10px 15px;
-      margin-left: 10px;
-      border-radius: 5px;
-      border: none;
-      cursor: pointer;
-      background: #10a37f;
-      color: white;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-  </style>
-</head>
-<body>
-
-<header>🤖 Dhanush AI</header>
-
-<div id="chatBox"></div>
-
-<div class="inputArea">
-  <input type="text" id="userInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter') sendMessage()">
-  <button onclick="sendMessage()">Send</button>
-</div>
-
 <script>
 
+let conversationHistory = [];
+
 function getAIResponse(message) {
-  message = message.toLowerCase();
+  message = message.toLowerCase().trim();
 
+  // Save user message
+  conversationHistory.push({ role: "user", text: message });
+
+  // Greeting
   if (message.includes("hello") || message.includes("hi")) {
-    return "Hello Dhanush! 👋 How can I help you today?";
+    return "Hello Dhanush! 👋 Ask me anything!";
   }
 
+  // Remember name
+  if (message.includes("my name is")) {
+    let name = message.replace("my name is", "").trim();
+    conversationHistory.push({ role: "memory", text: name });
+    return "Nice to meet you, " + name + " 😊 I will remember your name!";
+  }
+
+  // If user asks what did I say
+  if (message.includes("what did i say")) {
+    if (conversationHistory.length > 1) {
+      return "Earlier you said: \"" + conversationHistory[conversationHistory.length - 2].text + "\"";
+    } else {
+      return "This is our first message!";
+    }
+  }
+
+  // Math explanation
   if (message.includes("math")) {
-    return "Mathematics is the study of numbers, patterns, shapes and logic. Ask me a question and I’ll help!";
+    return "Math is about numbers and solving problems. You can also type calculations like 5+5.";
   }
 
-  if (message.includes("business")) {
-    return "Business is about solving problems and creating value. Start small and grow step by step.";
+  // Calculator
+  try {
+    if (/^[0-9+\-*/(). ]+$/.test(message)) {
+      return "Answer: " + eval(message);
+    }
+  } catch {
+    return "Calculation error.";
   }
 
-  if (message.includes("who are you")) {
-    return "I am Dhanush AI 🤖 created by you!";
+  // If user says remember
+  if (message.includes("remember")) {
+    return "I will try my best to remember our conversation in this session 😊";
   }
 
-  if (message.includes("time")) {
-    return "Current time: " + new Date().toLocaleTimeString();
-  }
-
-  if (message.includes("science")) {
-    return "Science helps us understand how the world works — from atoms to planets.";
-  }
-
-  return "I'm still learning 🤖. Try asking about math, science, business or time!";
+  return "Interesting! Tell me more.";
 }
 
 function addMessage(text, sender) {
@@ -154,10 +78,7 @@ function sendMessage() {
   setTimeout(() => {
     const reply = getAIResponse(message);
     addMessage(reply, "ai");
-  }, 500); // small delay for AI effect
+  }, 500);
 }
 
 </script>
-
-</body>
-</html>
