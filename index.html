@@ -4,77 +4,140 @@
   <title>Dhanush AI</title>
   <style>
     body {
+      margin: 0;
       font-family: Arial;
-      background-color: #f4f4f4;
+      background: #343541;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background: #202123;
+      padding: 15px;
       text-align: center;
+      font-size: 20px;
+      font-weight: bold;
     }
 
     #chatBox {
-      width: 60%;
-      margin: 20px auto;
-      background: white;
+      flex: 1;
       padding: 20px;
-      border-radius: 10px;
-      min-height: 200px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: left;
+      overflow-y: auto;
     }
 
     .user {
-      color: blue;
-      margin: 5px 0;
+      text-align: right;
+      margin: 10px 0;
     }
 
     .ai {
-      color: green;
-      margin: 5px 0;
+      text-align: left;
+      margin: 10px 0;
+    }
+
+    .bubble {
+      display: inline-block;
+      padding: 10px 15px;
+      border-radius: 15px;
+      max-width: 70%;
+    }
+
+    .user .bubble {
+      background: #10a37f;
+    }
+
+    .ai .bubble {
+      background: #444654;
+    }
+
+    .inputArea {
+      display: flex;
+      padding: 10px;
+      background: #202123;
     }
 
     input {
-      width: 60%;
+      flex: 1;
       padding: 10px;
-      margin-top: 10px;
+      border-radius: 5px;
+      border: none;
     }
 
     button {
       padding: 10px 15px;
+      margin-left: 10px;
+      border-radius: 5px;
+      border: none;
       cursor: pointer;
+      background: #10a37f;
+      color: white;
     }
   </style>
 </head>
-
 <body>
 
-  <h1>🤖 Dhanush AI</h1>
+<header>🤖 Dhanush AI</header>
 
-  <div id="chatBox"></div>
+<div id="chatBox"></div>
 
-  <input type="text" id="userInput" placeholder="Ask me anything...">
+<div class="inputArea">
+  <input type="text" id="userInput" placeholder="Ask anything...">
   <button onclick="sendMessage()">Send</button>
+</div>
 
-  <script>
-    function sendMessage() {
-      var input = document.getElementById("userInput").value;
-      var chatBox = document.getElementById("chatBox");
+<script>
+function getAIResponse(message) {
+  message = message.toLowerCase();
 
-      if(input === "") return;
+  if (message.includes("hello") || message.includes("hi")) {
+    return "Hello Dhanush! 👋 How can I help you today?";
+  }
 
-      chatBox.innerHTML += "<div class='user'><b>You:</b> " + input + "</div>";
+  if (message.includes("math")) {
+    return "Math is powerful! Tell me your question and I will try to help.";
+  }
 
-      var reply = "I am still learning 🤖";
+  if (message.includes("business")) {
+    return "Business is about solving problems and creating value. Start small and grow step by step.";
+  }
 
-      if(input.toLowerCase() === "hi") {
-        reply = "Hello Dhanush! 👋";
-      } 
-      else if(input.toLowerCase() === "how are you") {
-        reply = "I am just code, but I feel awesome 😄";
-      }
+  if (message.includes("who are you")) {
+    return "I am Dhanush AI 🤖 created by you!";
+  }
 
-      chatBox.innerHTML += "<div class='ai'><b>AI:</b> " + reply + "</div>";
+  if (message.includes("time")) {
+    return "Current time: " + new Date().toLocaleTimeString();
+  }
 
-      document.getElementById("userInput").value = "";
-    }
-  </script>
+  return "That’s interesting! Tell me more about it.";
+}
+
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const chatBox = document.getElementById("chatBox");
+  const message = input.value.trim();
+  if (!message) return;
+
+  chatBox.innerHTML += `
+    <div class="user">
+      <div class="bubble">${message}</div>
+    </div>
+  `;
+
+  const reply = getAIResponse(message);
+
+  chatBox.innerHTML += `
+    <div class="ai">
+      <div class="bubble">${reply}</div>
+    </div>
+  `;
+
+  chatBox.scrollTop = chatBox.scrollHeight;
+  input.value = "";
+}
+</script>
 
 </body>
 </html>
