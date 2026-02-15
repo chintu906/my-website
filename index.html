@@ -5,8 +5,7 @@ let conversationHistory = [];
 function getAIResponse(message) {
   message = message.toLowerCase().trim();
 
-  // Save user message
-  conversationHistory.push({ role: "user", text: message });
+  conversationHistory.push(message);
 
   // Greeting
   if (message.includes("hello") || message.includes("hi")) {
@@ -16,39 +15,43 @@ function getAIResponse(message) {
   // Remember name
   if (message.includes("my name is")) {
     let name = message.replace("my name is", "").trim();
-    conversationHistory.push({ role: "memory", text: name });
+    localStorage.setItem("username", name);
     return "Nice to meet you, " + name + " 😊 I will remember your name!";
   }
 
-  // If user asks what did I say
+  // Recall name
+  if (message.includes("what is my name")) {
+    let name = localStorage.getItem("username");
+    if (name) {
+      return "Your name is " + name + " 😄";
+    } else {
+      return "I don't know your name yet. Tell me using 'my name is ...'";
+    }
+  }
+
+  // Repeat last message
   if (message.includes("what did i say")) {
     if (conversationHistory.length > 1) {
-      return "Earlier you said: \"" + conversationHistory[conversationHistory.length - 2].text + "\"";
+      return "Earlier you said: \"" + conversationHistory[conversationHistory.length - 2] + "\"";
     } else {
-      return "This is our first message!";
+      return "This is your first message.";
     }
   }
 
-  // Math explanation
+  // Simple math
+  if (/^[0-9+\-*/(). ]+$/.test(message)) {
+    try {
+      return "Answer: " + Function('"use strict";return (' + message + ')')();
+    } catch {
+      return "Calculation error.";
+    }
+  }
+
   if (message.includes("math")) {
-    return "Math is about numbers and solving problems. You can also type calculations like 5+5.";
+    return "Math is about numbers and solving problems. Try 5+5.";
   }
 
-  // Calculator
-  try {
-    if (/^[0-9+\-*/(). ]+$/.test(message)) {
-      return "Answer: " + eval(message);
-    }
-  } catch {
-    return "Calculation error.";
-  }
-
-  // If user says remember
-  if (message.includes("remember")) {
-    return "I will try my best to remember our conversation in this session 😊";
-  }
-
-  return "Interesting! Tell me more.";
+  return "Interesting! Tell me more 😊";
 }
 
 function addMessage(text, sender) {
