@@ -1,14 +1,13 @@
-// Function to ask AI and show the answer
+// Function to ask AI and show answer
 async function askAI(question) {
     if (!question) return;
 
-    // Show the user question in your chat area (optional)
-    const chatDiv = document.getElementById('chat'); // make sure you have a div with id="chat"
+    const chatDiv = document.getElementById('chat'); // chat display area
     chatDiv.innerHTML += `<div class="message user"><b>You:</b> ${question}</div>`;
 
     try {
-        // Call your backend API
-        const response = await fetch('/ask', {   // '/ask' should be your backend endpoint
+        // Call your backend API (make sure your backend is running with /ask endpoint)
+        const response = await fetch('/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question })
@@ -16,7 +15,6 @@ async function askAI(question) {
 
         const data = await response.json();
 
-        // Show AI answer in your chat area
         chatDiv.innerHTML += `<div class="message ai"><b>AI:</b> ${data.answer}</div>`;
         chatDiv.scrollTop = chatDiv.scrollHeight; // scroll to bottom
     } catch (error) {
@@ -25,3 +23,43 @@ async function askAI(question) {
     }
 }
 
+// Function to clear chat
+function clearChat() {
+    const chatDiv = document.getElementById('chat');
+    chatDiv.innerHTML = '';
+}
+
+// Function to handle user input (press enter to ask)
+function handleInput(event) {
+    if (event.key === 'Enter') {
+        const question = document.getElementById('question').value;
+        document.getElementById('question').value = '';
+        askAI(question);
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My AI Website</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        #chat { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; height: 400px; overflow-y: auto; }
+        .message { margin: 10px 0; }
+        .user { color: blue; }
+        .ai { color: green; }
+        input { width: 70%; padding: 10px; }
+        button { padding: 10px; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <h2>My AI Q&A Tool</h2>
+    <div id="chat"></div>
+    <input type="text" id="question" placeholder="Type your question..." onkeypress="handleInput(event)" />
+    <button onclick="askAI(document.getElementById('question').value)">Ask</button>
+    <button onclick="clearChat()">Clear Chat</button>
+
+    <script src="functions.js"></script>
+</body>
+</html>
