@@ -1,87 +1,49 @@
-<script>
-
-let conversationHistory = [];
-
 function getAIResponse(message) {
   message = message.toLowerCase().trim();
 
-  conversationHistory.push(message);
-
   // Greeting
   if (message.includes("hello") || message.includes("hi")) {
-    return "Hello Dhanush! 👋 Ask me anything!";
+    return "Hello Dhanush! 👋 Ask me anything about math, science, business or programming!";
   }
 
-  // Remember name
-  if (message.includes("my name is")) {
-    let name = message.replace("my name is", "").trim();
-    localStorage.setItem("username", name);
-    return "Nice to meet you, " + name + " 😊 I will remember your name!";
-  }
-
-  // Recall name
-  if (message.includes("what is my name")) {
-    let name = localStorage.getItem("username");
-    if (name) {
-      return "Your name is " + name + " 😄";
-    } else {
-      return "I don't know your name yet. Tell me using 'my name is ...'";
-    }
-  }
-
-  // Repeat last message
-  if (message.includes("what did i say")) {
-    if (conversationHistory.length > 1) {
-      return "Earlier you said: \"" + conversationHistory[conversationHistory.length - 2] + "\"";
-    } else {
-      return "This is your first message.";
-    }
-  }
-
-  // Simple math
-  if (/^[0-9+\-*/(). ]+$/.test(message)) {
-    try {
-      return "Answer: " + Function('"use strict";return (' + message + ')')();
-    } catch {
-      return "Calculation error.";
-    }
-  }
-
+  // Math explanation
   if (message.includes("math")) {
-    return "Math is about numbers and solving problems. Try 5+5.";
+    return "Mathematics is about numbers, patterns, and problem solving. It helps in school, business, and technology.";
   }
 
-  return "Interesting! Tell me more 😊";
+  // Simple explanation
+  if (message.includes("simple")) {
+    return "Okay 😊 I will explain in simple words. Tell me the topic again clearly.";
+  }
+
+  // Programming
+  if (message.includes("programming") || message.includes("code")) {
+    return "Programming means giving instructions to a computer using languages like JavaScript, Python, or C++.";
+  }
+
+  // Science
+  if (message.includes("science")) {
+    return "Science helps us understand nature, energy, space, and life around us.";
+  }
+
+  // Business
+  if (message.includes("business")) {
+    return "Business means solving people's problems and earning money by providing value.";
+  }
+
+  // Time
+  if (message.includes("time")) {
+    return "Current time: " + new Date().toLocaleTimeString();
+  }
+
+  // Simple calculator (VERY COOL FEATURE 🔥)
+  try {
+    if (message.match(/^[0-9+\-*/(). ]+$/)) {
+      return "Answer: " + eval(message);
+    }
+  } catch {
+    return "Calculation error.";
+  }
+
+  return "I'm still learning 🤖 Try asking about math, science, programming or type a calculation like 5+10.";
 }
-
-function addMessage(text, sender) {
-  const chatBox = document.getElementById("chatBox");
-
-  const messageDiv = document.createElement("div");
-  messageDiv.className = sender;
-
-  const bubble = document.createElement("div");
-  bubble.className = "bubble";
-  bubble.textContent = text;
-
-  messageDiv.appendChild(bubble);
-  chatBox.appendChild(messageDiv);
-
-  chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-function sendMessage() {
-  const input = document.getElementById("userInput");
-  const message = input.value.trim();
-  if (!message) return;
-
-  addMessage(message, "user");
-  input.value = "";
-
-  setTimeout(() => {
-    const reply = getAIResponse(message);
-    addMessage(reply, "ai");
-  }, 500);
-}
-
-</script>
