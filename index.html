@@ -8,7 +8,7 @@
 body{
   margin:0;
   font-family:Arial, sans-serif;
-  background:#0b0f14;
+  background:#0f172a;
   color:white;
   display:flex;
   flex-direction:column;
@@ -32,11 +32,12 @@ header{
 }
 
 .message{
-  max-width:80%;
+  max-width:75%;
   padding:12px 16px;
   border-radius:18px;
   margin:8px 0;
-  line-height:1.4;
+  line-height:1.5;
+  animation:fadeIn 0.3s ease;
 }
 
 .user{
@@ -76,6 +77,15 @@ button{
   font-size:16px;
   cursor:pointer;
 }
+
+button:hover{
+  background:#1d4ed8;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(5px);}
+  to{opacity:1; transform:translateY(0);}
+}
 </style>
 </head>
 
@@ -84,7 +94,7 @@ button{
 <header>🤖 Dhanush AI</header>
 
 <div id="chat">
-  <div class="message ai">Hi! What’s on your mind today? 😊</div>
+  <div class="message ai">Hi Dhanush 👋 I'm your smart AI assistant. Ask me anything!</div>
 </div>
 
 <div class="input-area">
@@ -94,26 +104,47 @@ button{
 </div>
 
 <script>
+
+// Safe Calculator
+function safeCalculate(expression) {
+  try {
+    if (!/^[0-9+\-*/(). ]+$/.test(expression)) return null;
+    return Function('"use strict"; return (' + expression + ')')();
+  } catch {
+    return null;
+  }
+}
+
+// AI Brain
 function getAIResponse(msg){
   msg = msg.toLowerCase();
 
   if(msg.includes("hi") || msg.includes("hello"))
-    return "Hello Dhanush 👋 Ask me anything!";
+    return "Hello 👋 How can I help you today?";
+
+  if(msg.includes("who are you"))
+    return "I'm Dhanush AI 🤖 — built by a future tech genius!";
 
   if(msg.includes("math"))
-    return "Sure! Tell me your math question.";
+    return "Send me your math question and I’ll solve it step-by-step.";
 
-  if(msg.match(/^[0-9+\-*/(). ]+$/)){
-    try{
-      return "Answer: " + eval(msg);
-    }catch{
-      return "Calculation error.";
-    }
-  }
+  if(msg.includes("science"))
+    return "Ask me physics, chemistry or biology 🔬";
 
-  return "I'm still learning 🤖. Ask me about math, science or programming.";
+  if(msg.includes("html") || msg.includes("javascript") || msg.includes("code"))
+    return "Coding time 🔥 Tell me what you want to build.";
+
+  if(msg.includes("motivate"))
+    return "You are only 14 and already building AI websites 💪 Keep going!";
+
+  const calc = safeCalculate(msg);
+  if(calc !== null)
+    return "Answer: " + calc;
+
+  return "That’s interesting 🤔 Tell me more so I can help better.";
 }
 
+// Send Message
 function sendMessage(){
   const input = document.getElementById("input");
   const text = input.value.trim();
@@ -124,9 +155,10 @@ function sendMessage(){
 
   setTimeout(()=>{
     addMessage(getAIResponse(text),"ai");
-  },500);
+  },600);
 }
 
+// Add Message to Chat
 function addMessage(text,type){
   const chat = document.getElementById("chat");
   const div = document.createElement("div");
@@ -135,6 +167,7 @@ function addMessage(text,type){
   chat.appendChild(div);
   chat.scrollTop=chat.scrollHeight;
 }
+
 </script>
 
 </body>
